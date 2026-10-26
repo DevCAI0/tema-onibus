@@ -1,0 +1,36 @@
+/*
+ * Theme switch revealed through an animated mask (the elysiajs.com effect).
+ * Scoped to [data-theme-toggle], set only while this transition runs,
+ * so other View Transitions in the app keep their own animations.
+ */
+:root[data-theme-toggle]::view-transition-group(root) {
+  z-index: 100;
+}
+
+:root[data-theme-toggle]::view-transition-new(root) {
+  animation: theme-toggle-mask var(--theme-toggle-duration) cubic-bezier(0.7, 0, 0.84, 0) both;
+  -webkit-mask: var(--theme-toggle-mask) 50% / 0 no-repeat;
+  mask: var(--theme-toggle-mask) 50% / 0 no-repeat;
+}
+
+/* no mask here: it only keeps the old screen visible until the end (avoids the default fade) */
+:root[data-theme-toggle]::view-transition-old(root) {
+  animation: theme-toggle-mask var(--theme-toggle-duration) cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+/* 10% growing, 80% holding while the GIF plays, 10% covering the screen */
+@keyframes theme-toggle-mask {
+  0% {
+    -webkit-mask-size: 0 auto;
+    mask-size: 0 auto;
+  }
+  10%,
+  90% {
+    -webkit-mask-size: var(--theme-toggle-mask-size) auto;
+    mask-size: var(--theme-toggle-mask-size) auto;
+  }
+  100% {
+    -webkit-mask-size: 750vmax auto;
+    mask-size: 750vmax auto;
+  }
+}
